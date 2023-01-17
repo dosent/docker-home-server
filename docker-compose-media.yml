@@ -1,25 +1,22 @@
-version: '2.4'
-
-volumes:
-  serviio-config: 
-    external: true
-  serviio-start:
-    external: true
+version: '3.7'
 
 services:
-  serviio:
-    image: cina/serviio:latest
-    container_name: serviio
-    volumes:
-      - serviio-config:/config 
-      - /tmp:/transcode 
-      - /etc/localtime:/etc/localtime:ro 
-      - /media:/media 
-      - /mnt/storage/media:/mnt/storage/media 
-    network_mode: 'host'
-    mem_limit: 1gb
+
+  universalmediaserver:
+
+    image: universalmediaserver/ums
+    container_name: ums
+    network_mode: host
     environment:
-      - 'SERVIIO_OPTS=-Dserviio.cdsAnonymousAccess=true'
-      - 'PGID=996' 
-      - 'PUID=997' 
-    restart: unless-stopped
+      - UMS_PROFILE=/profile
+      
+    volumes:
+      - /media/profile:/profile
+      - /media/media:/media:ro
+
+    restart: always
+
+#volumes:
+#  profile:
+
+#  media:
