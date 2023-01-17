@@ -1,12 +1,25 @@
-version: '3'
+version: '2.4'
+
+volumes:
+  serviio-config: 
+    external: true
+  serviio-start:
+    external: true
+
 services:
   serviio:
-    image: riftbit/docker-serviio:latest
-    ports:
-     - "23423:23423/tcp"
-     - "8895:8895/tcp"
-     - "1900:1900/udp"
+    image: cina/serviio:latest
+    container_name: serviio
     volumes:
-     - /media/serviio/library:/opt/serviio/library
-     - /media/serviio/plugins:/opt/serviio/plugins
-     - /media/serviio/log:/opt/serviio/log
+      - serviio-config:/config 
+      - /tmp:/transcode 
+      - /etc/localtime:/etc/localtime:ro 
+      - /media:/media 
+      - /mnt/storage/media:/mnt/storage/media 
+    network_mode: 'host'
+    mem_limit: 1gb
+    environment:
+      - 'SERVIIO_OPTS=-Dserviio.cdsAnonymousAccess=true'
+      - 'PGID=996' 
+      - 'PUID=997' 
+    restart: unless-stopped
